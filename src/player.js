@@ -180,9 +180,9 @@ Player.prototype.update = function() {
 
 	// awen
 	this.EV.onPlaying(this.video.currentTime);
-	if (this.video.currentTime == this.video.decodedTime) {
-		this.EV.onPlayComplete();
-	}
+	// if (this.video.currentTime == this.video.decodedTime) {
+	// 	this.EV.onPlayComplete();
+	// }
 };
 
 Player.prototype.updateForStreaming = function() {
