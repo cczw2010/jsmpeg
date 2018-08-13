@@ -1,7 +1,20 @@
 JSMpeg.Player = (function(){ "use strict";
+// add by awen
+var noop = function(){};
 
 var Player = function(url, options) {
 	this.options = options || {};
+
+	// add by awen
+	// 用于各个环节提供事件管理
+	this.EV = {
+		onProgress:noop,		//加载中
+		onChunkLoad:noop,		//区块加载完成时，仅当开启区块加载静态文件
+		onComplete:noop,		//视频加载完成
+		onCanPlay:noop,			//当视频可以播放时
+		onPlaying:noop,			//当视频播放时（player获取当前播放时间是不准的）
+		onPlayComplete:noop,	//当视频播放完时, 可能会有问题
+	}
 
 	if (options.source) {
 		this.source = new options.source(url, options);
@@ -13,6 +26,7 @@ var Player = function(url, options) {
 	}
 	else if (options.progressive !== false) {
 		this.source = new JSMpeg.Source.AjaxProgressive(url, options);
+		this.source.evHandle = this.EV;
 		options.streaming = false;
 	}
 	else {
@@ -162,6 +176,12 @@ Player.prototype.update = function() {
 	}
 	else {
 		this.updateForStaticFile();
+	}
+
+	// awen
+	this.EV.onPlaying(this.video.currentTime);
+	if (this.video.currentTime == this.video.decodedTime) {
+		this.EV.onPlayComplete();
 	}
 };
 

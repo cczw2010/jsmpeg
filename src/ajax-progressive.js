@@ -64,6 +64,8 @@ AjaxProgressiveSource.prototype.loadNextChunk = function() {
 	
 	if (start >= this.fileSize || this.aborted) {
 		this.completed = true;
+		// awen
+		this.evHandle.onComplete(this.fileSize,this.loadTime);
 		return;
 	}
 	
@@ -85,10 +87,11 @@ AjaxProgressiveSource.prototype.loadNextChunk = function() {
 			}
 		}
 	}.bind(this);
-	
-	if (start === 0) {
+
+	// awen 不只第一次计算进度加载
+	// if (start === 0) {
 		this.request.onprogress = this.onProgress.bind(this);
-	}
+	// }
 
 	this.request.open('GET', this.url+'?'+start+"-"+end);
 	this.request.setRequestHeader("Range", "bytes="+start+"-"+end);
@@ -97,7 +100,10 @@ AjaxProgressiveSource.prototype.loadNextChunk = function() {
 };
 
 AjaxProgressiveSource.prototype.onProgress = function(ev) {
-	this.progress = (ev.loaded / ev.total);
+	// this.progress = (ev.loaded / ev.total);
+	// awen
+	this.progress = ((this.loadedSize + ev.loaded) / this.fileSize);
+	this.evHandle.onProgress(ev.loaded,ev.total,this.progress);
 };
 
 AjaxProgressiveSource.prototype.onChunkLoad = function(data) {
@@ -110,8 +116,17 @@ AjaxProgressiveSource.prototype.onChunkLoad = function(data) {
 	if (this.destination) {
 		this.destination.write(data);
 	}
+	// awen
+	if (!this.loadTime) {
+		this.evHandle.onCanPlay();
+	}
 
 	this.loadTime = JSMpeg.Now() - this.loadStartTime;
+
+	// awen
+	this.evHandle.onChunkLoad(data.byteLength,this.loadTime,this.loadedSize,this.fileSize);
+
+
 	if (!this.throttled) {
 		this.loadNextChunk();
 	}
