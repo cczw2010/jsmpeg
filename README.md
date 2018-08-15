@@ -1,4 +1,4 @@
-# modidy by awen
+# modify by awen
 
 增加事件*只针对静态文件分区块加载的情况*
 
