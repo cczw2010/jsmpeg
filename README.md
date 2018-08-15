@@ -1,3 +1,18 @@
+# modidy by awen
+
+增加事件*只针对静态文件分区块加载的情况*
+
+	player.EV = {
+		onProgress:noop,		//加载中
+		onChunkLoad:noop,		//区块加载完成时
+		onComplete:noop,		//视频加载完成
+		onCanPlay:noop,			//当视频可以播放时
+		onPlaying:noop,			//当视频播放时
+		onPause:noop,			//当视频暂停播放时
+		onEnded:noop,			//当视频播放完时
+	}
+
+
 # JSMpeg – MPEG1 Video & MP2 Audio Decoder in JavaScript
 
 JSMpeg is a Video Player written in JavaScript. It consists of an MPEG-TS demuxer, MPEG1 video & MP2 audio decoders, WebGL & Canvas2D renderers and WebAudio sound output. JSMpeg can load static videos via Ajax and allows low latency streaming (~50ms) via WebSockets.

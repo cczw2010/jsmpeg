@@ -7,13 +7,15 @@ var Player = function(url, options) {
 
 	// add by awen
 	// 用于各个环节提供事件管理
+	// ！！注意基本所有事件都是基于静态文件分块加载的方式下触发的。
 	this.EV = {
 		onProgress:noop,		//加载中
 		onChunkLoad:noop,		//区块加载完成时，仅当开启区块加载静态文件
 		onComplete:noop,		//视频加载完成
 		onCanPlay:noop,			//当视频可以播放时
 		onPlaying:noop,			//当视频播放时（player获取当前播放时间是不准的）
-		onPlayComplete:noop,	//当视频播放完时, 可能会有问题
+		onPause:noop,			//当视频暂停播放时
+		onEnded:noop,			//当视频播放完时
 	}
 
 	if (options.source) {
@@ -104,6 +106,10 @@ Player.prototype.pause = function(ev) {
 		this.audioOut.stop();
 		this.seek(this.currentTime);
 	}
+	// awen , 借用一下ev,ev为真说明是其他原因不是暂停
+	if (!ev) {
+		this.EV.onPause();
+	}
 };
 
 Player.prototype.getVolume = function() {
@@ -180,9 +186,6 @@ Player.prototype.update = function() {
 
 	// awen
 	this.EV.onPlaying(this.video.currentTime);
-	// if (this.video.currentTime == this.video.decodedTime) {
-	// 	this.EV.onPlayComplete();
-	// }
 };
 
 Player.prototype.updateForStreaming = function() {
@@ -263,7 +266,9 @@ Player.prototype.updateForStaticFile = function() {
 			this.seek(0);
 		}
 		else {
-			this.pause();
+			// awen
+			this.pause(1);
+			this.EV.onEnded();
 		}
 	}
 };
