@@ -2,15 +2,13 @@
 
 增加事件*只针对静态文件分区块加载的情况*
 
-	player.EV = {
-		onProgress:noop,		//加载中
-		onChunkLoad:noop,		//区块加载完成时
-		onComplete:noop,		//视频加载完成
-		onCanPlay:noop,			//当视频可以播放时
-		onPlaying:noop,			//当视频播放时
-		onPause:noop,			//当视频暂停播放时
-		onEnded:noop,			//当视频播放完时
-	}
+	player.EV.onProgress = function(){}		//加载中
+	player.EV.onChunkLoad = function(){}	//区块加载完成时
+	player.EV.onComplete = function(){}		//视频加载完成
+	player.EV.onCanPlay = function(){}		//当视频可以播放时
+	player.EV.onPlaying = function(){}		//当视频播放时
+	player.EV.onPause = function(){}		//当视频暂停播放时
+	player.EV.onEnded = function(){}		//当视频播放完时
 
 
 # JSMpeg – MPEG1 Video & MP2 Audio Decoder in JavaScript
